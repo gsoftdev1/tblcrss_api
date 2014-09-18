@@ -1,0 +1,77 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+	<listener>
+		<listener-class>com.tablecross.api.common.AppListener</listener-class>
+	</listener>
+
+	<session-config>
+		<session-timeout>120</session-timeout>
+	</session-config>
+
+	<servlet>
+		<servlet-name>register</servlet-name>
+		<servlet-class>com.tablecross.api.servlet.Register</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>register</servlet-name>
+		<url-pattern>/client-api/register</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>login</servlet-name>
+		<servlet-class>com.tablecross.api.servlet.Login</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>login</servlet-name>
+		<url-pattern>/client-api/login</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>logout</servlet-name>
+		<servlet-class>com.tablecross.api.servlet.Logout</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>logout</servlet-name>
+		<url-pattern>/client-api/logout</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>changePassword</servlet-name>
+		<servlet-class>com.tablecross.api.servlet.ChangePassword</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>changePassword</servlet-name>
+		<url-pattern>/client-api/changePassword</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>getAreas</servlet-name>
+		<servlet-class>com.tablecross.api.servlet.GetAreas</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>getAreas</servlet-name>
+		<url-pattern>/client-api/getAreas</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>getUserInfo</servlet-name>
+		<servlet-class>com.tablecross.api.servlet.GetUserInfo</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>getUserInfo</servlet-name>
+		<url-pattern>/client-api/getUserInfo</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>updateUser</servlet-name>
+		<servlet-class>com.tablecross.api.servlet.UpdateUser</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>updateUser</servlet-name>
+		<url-pattern>/client-api/updateUser</url-pattern>
+	</servlet-mapping>
+
+</web-app>

@@ -103,7 +103,8 @@ public class Register extends HttpServlet {
 			response.setErrorMess(ConstantParams.ERROR_MESS_PARAMS_INVALID);
 			return ConvertUtil.convertObjectToJson(response);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("ERROR: ", e);
+			response.setSuccess(false);
 			response.setErrorCode(ConstantParams.ERROR_CODE_SYSTEM_ERROR);
 			response.setErrorMess(ConstantParams.ERROR_MESS_SYSTEM_ERROR + ": "
 					+ e.getMessage());

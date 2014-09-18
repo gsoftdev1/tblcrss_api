@@ -98,6 +98,7 @@ public class Login extends HttpServlet {
 				Integer userId = UsersDAO.insert(userDTO);
 				log.info("new user create userId: " + userId);
 				if (userId == null || userId == 0) {
+					response.setSuccess(false);
 					response.setErrorCode(ConstantParams.ERROR_CODE_SYSTEM_ERROR);
 					response.setErrorMess(ConstantParams.ERROR_MESS_SYSTEM_ERROR);
 					return ConvertUtil.convertObjectToJson(response);
@@ -105,7 +106,14 @@ public class Login extends HttpServlet {
 					userDTO.setId(userId);
 				}
 			}
-
+			if (userDTO != null && loginType == ConstantParams.LOGIN_TYPE_APP
+					&& userDTO.getPassword() != null
+					&& !userDTO.getPassword().equals(password)) {
+				response.setSuccess(false);
+				response.setErrorCode(ConstantParams.ERROR_CODE_WRONG_PASSWORD);
+				response.setErrorMess(ConstantParams.ERROR_MESS_WRONG_PASSWORD);
+				return ConvertUtil.convertObjectToJson(response);
+			}
 			session.setAttribute(ConstantParams.LOGIN_USER_INFO, userDTO);
 			response.setSuccess(true);
 			response.setEmail(email);
@@ -123,7 +131,8 @@ public class Login extends HttpServlet {
 			response.setErrorMess(ConstantParams.ERROR_MESS_PARAMS_INVALID);
 			return ConvertUtil.convertObjectToJson(response);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("ERROR: ", e);
+			response.setSuccess(false);
 			response.setErrorCode(ConstantParams.ERROR_CODE_SYSTEM_ERROR);
 			response.setErrorMess(ConstantParams.ERROR_MESS_SYSTEM_ERROR + ": "
 					+ e.getMessage());

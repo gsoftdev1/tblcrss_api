@@ -66,8 +66,8 @@ public class ChangePassword extends HttpServlet {
 
 			if (!userDTO.getPassword().equals(oldPassword)) {
 				response.setSuccess(false);
-				response.setErrorCode(ConstantParams.ERROR_CODE_OLD_PASSWORD_INVALID);
-				response.setErrorMess(ConstantParams.ERROR_MESS_OLD_PASSWORD_INVALID);
+				response.setErrorCode(ConstantParams.ERROR_CODE_WRONG_PASSWORD);
+				response.setErrorMess(ConstantParams.ERROR_MESS_WRONG_PASSWORD);
 				return ConvertUtil.convertObjectToJson(response);
 			}
 
@@ -90,7 +90,8 @@ public class ChangePassword extends HttpServlet {
 			response.setErrorMess(ConstantParams.ERROR_MESS_USER_ID_NOT_EXIST);
 			return ConvertUtil.convertObjectToJson(response);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("ERROR: ", e);
+			response.setSuccess(false);
 			response.setErrorCode(ConstantParams.ERROR_CODE_SYSTEM_ERROR);
 			response.setErrorMess(ConstantParams.ERROR_MESS_SYSTEM_ERROR + ": "
 					+ e.getMessage());

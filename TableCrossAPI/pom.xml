@@ -60,7 +60,7 @@
 				<configuration>
 					<url>http://localhost:8080/manager</url>
 					<server>TomcatServer</server>
-					<path>/</path>
+					<path>/client-api</path>
 				</configuration>
 			</plugin>
 		</plugins>

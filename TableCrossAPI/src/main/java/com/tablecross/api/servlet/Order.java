@@ -2,7 +2,6 @@ package com.tablecross.api.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,13 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.tablecross.api.common.ConstantParams;
-import com.tablecross.api.dao.AreaDAO;
-import com.tablecross.api.model.AreaDTO;
-import com.tablecross.api.object.GetAreasResponse;
+import com.tablecross.api.object.OrderResponse;
 import com.tablecross.api.util.ConvertUtil;
 
-public class GetAreas extends HttpServlet {
-	private static Logger log = Logger.getLogger(GetAreas.class);
+public class Order extends HttpServlet {
+	private static Logger log = Logger.getLogger(Order.class);
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -32,7 +29,7 @@ public class GetAreas extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String outStr = doGetAreas(req);
+		String outStr = doOrder(req);
 		log.info("Response: " + outStr);
 		resp.setContentType("application/json");
 		PrintWriter out = resp.getWriter();
@@ -41,12 +38,10 @@ public class GetAreas extends HttpServlet {
 		out.close();
 	}
 
-	private String doGetAreas(HttpServletRequest req) {
-		GetAreasResponse response = new GetAreasResponse();
+	private String doOrder(HttpServletRequest req) {
+		OrderResponse response = new OrderResponse();
 		try {
-			List<AreaDTO> lst = AreaDAO.getAreas();
-			response.setQuantity(lst.size());
-			response.setItems(lst.toArray(new AreaDTO[lst.size()]));
+
 			response.setSuccess(true);
 			response.setErrorCode(ConstantParams.ERROR_CODE_SUCCESS);
 			response.setErrorMess(ConstantParams.ERROR_MESS_SUCCESS);
@@ -59,6 +54,5 @@ public class GetAreas extends HttpServlet {
 					+ e.getMessage());
 			return ConvertUtil.convertObjectToJson(response);
 		}
-
 	}
 }

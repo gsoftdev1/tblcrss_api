@@ -1,15 +1,22 @@
 package com.tablecross.api.model;
 
-import java.math.BigDecimal;
-
 public class RestaurantsDTO {
 	private Integer restaurantId;
 	private String restaurantName;
 	private String address;
 	private String imageUrl;
 	private String website;
-	private BigDecimal longitude;
-	private BigDecimal latitude;
+	private Double longitude;
+	private Double latitude;
+	private String orderDate;
+
+	public String getOrderDate() {
+		return orderDate;
+	}
+
+	public void setOrderDate(String orderDate) {
+		this.orderDate = orderDate;
+	}
 
 	public Integer getRestaurantId() {
 		return restaurantId;
@@ -51,20 +58,19 @@ public class RestaurantsDTO {
 		this.website = website;
 	}
 
-	public BigDecimal getLongitude() {
+	public Double getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(BigDecimal longitude) {
+	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
 
-	public BigDecimal getLatitude() {
+	public Double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(BigDecimal latitude) {
+	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
-
 }

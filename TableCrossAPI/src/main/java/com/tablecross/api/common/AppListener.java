@@ -43,7 +43,7 @@ public class AppListener implements ServletContextListener {
 					+ password);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("ERROR: ", e);
 		} finally {
 			IoUtils.closeFile(fis);
 		}

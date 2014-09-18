@@ -1,6 +1,5 @@
 package com.tablecross.api.dao;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,13 +12,14 @@ import org.apache.log4j.Logger;
 import com.tablecross.api.common.ConstantParams;
 import com.tablecross.api.model.ConnectionDataBase;
 import com.tablecross.api.model.RestaurantsDTO;
+import com.tablecross.api.util.ConvertUtil;
 
 public class RestaurantsDAO {
 	private static Logger log = Logger.getLogger(RestaurantsDAO.class);
 
 	public static List<RestaurantsDTO> searchRestaurant(int searchType,
-			Integer userId, String searchKey, BigDecimal longitude,
-			BigDecimal latitude, int total) throws Exception {
+			Integer userId, String searchKey, Double longitude,
+			Double latitude, Float distance, int total) throws Exception {
 		Connection conn = ConnectionDataBase.getConnection();
 		if (conn == null) {
 			log.error("Can not connect to Database");
@@ -33,24 +33,52 @@ public class RestaurantsDAO {
 			conn.setAutoCommit(false);
 			switch (searchType) {
 			case ConstantParams.SEARCH_TYPE_HISTORY:
-				sql = "select r.* from orders o "
+				sql = "select r.*,o.orderdate from orders o "
 						+ "inner join restaurants r on o.Restaurants_restaurants_id=r.restaurants_id "
 						+ "where o.users_user_id="
 						+ userId
-						+ " group by r.restaurants_id order by o.orderdate desc limit "
-						+ total;
+						+ " group by r.restaurants_id order by o.orderdate desc";
+				if (total != -1) {
+					sql = sql + " limit " + total;
+				}
 				break;
 			case ConstantParams.SEARCH_TYPE_DISTANCE:
-				sql = "select * from restaurants order by restaurants_name limit "
-						+ total;
+				sql = "SELECT r.*, (6371 * ACOS(COS( radians("
+						+ latitude
+						+ ") )* COS( radians( r.latitude ) )* COS( radians( r.longitude ) - radians("
+						+ longitude + ") )+ SIN( radians(" + latitude
+						+ ") )* SIN( radians( r.latitude ) ))) AS distance "
+						+ "FROM restaurants r HAVING distance <=" + distance;
+				if (searchKey != null && !searchKey.equals("")) {
+					sql = sql + " and (r.restaurants_name like '%" + searchKey
+							+ "%' or r.address like '%" + searchKey + "%')";
+				}
+				sql = sql + " ORDER BY distance";
+				if (total != -1) {
+					sql = sql + " limit " + total;
+				}
 				break;
 			case ConstantParams.SEARCH_TYPE_KEY_WORD:
-				sql = "select * from restaurants order by restaurants_name limit "
-						+ total;
+				sql = "SELECT r.* FROM restaurants r WHERE true";
+				if (searchKey != null && !searchKey.equals("")) {
+					sql = sql + " and (r.restaurants_name like '%" + searchKey
+							+ "%' or r.address like '%" + searchKey + "%')";
+				}
+				sql = sql + " ORDER BY r.restaurants_name";
+				if (total != -1) {
+					sql = sql + " limit " + total;
+				}
 				break;
 			default:
-				sql = "select * from restaurants order by restaurants_name limit "
-						+ total;
+				sql = "SELECT r.* FROM restaurants r WHERE true";
+				if (searchKey != null && !searchKey.equals("")) {
+					sql = sql + " and (r.restaurants_name like '%" + searchKey
+							+ "%' or r.address like '%" + searchKey + "%')";
+				}
+				sql = sql + " ORDER BY r.restaurants_name";
+				if (total != -1) {
+					sql = sql + " limit " + total;
+				}
 				break;
 			}
 
@@ -59,7 +87,17 @@ public class RestaurantsDAO {
 			rs = st.executeQuery(sql);
 			while (rs.next()) {
 				RestaurantsDTO res = new RestaurantsDTO();
-				// area.setAreaId(rs.getInt("area_id"));
+				res.setRestaurantId(rs.getInt("restaurants_id"));
+				res.setRestaurantName(rs.getString("restaurants_name"));
+				res.setAddress(rs.getString("address"));
+				res.setImageUrl(rs.getString("image"));
+				res.setWebsite(rs.getString("website"));
+				res.setLongitude(rs.getDouble("longitude"));
+				res.setLatitude(rs.getDouble("latitude"));
+				if (searchType == ConstantParams.SEARCH_TYPE_HISTORY) {
+					res.setOrderDate(ConvertUtil.getFormatDateView(rs
+							.getDate("orderdate")));
+				}
 				lst.add(res);
 			}
 

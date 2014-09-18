@@ -2,7 +2,6 @@ package com.tablecross.api.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -58,9 +57,10 @@ public class SearchRestaurant extends HttpServlet {
 			if (req.getParameter("total") != null) {
 				total = Integer.parseInt(req.getParameter("total"));
 			}
-			String searchKey = req.getParameter("searchType");
-			BigDecimal longitude = null;
-			BigDecimal latitude = null;
+			String searchKey = req.getParameter("searchKey");
+			Double longitude = null;
+			Double latitude = null;
+			Float distance = null;
 
 			if (searchType == ConstantParams.SEARCH_TYPE_HISTORY) {
 				if (userDTO == null) {
@@ -69,26 +69,32 @@ public class SearchRestaurant extends HttpServlet {
 					response.setErrorMess(ConstantParams.ERROR_MESS_USER_IS_NOT_LOGIN);
 					return ConvertUtil.convertObjectToJson(response);
 				}
-
-				longitude = new BigDecimal(req.getParameter("longitude"));
-				latitude = new BigDecimal(req.getParameter("latitude"));
 			}
+
+			if (searchType == ConstantParams.SEARCH_TYPE_DISTANCE) {
+				longitude = Double.parseDouble(req.getParameter("longitude"));
+				latitude = Double.parseDouble(req.getParameter("latitude"));
+				distance = Float.parseFloat(req.getParameter("distance"));
+			}
+
 			List<RestaurantsDTO> lst = RestaurantsDAO.searchRestaurant(
 					searchType, (userDTO != null ? userDTO.getId() : null),
-					searchKey, longitude, latitude, total);
+					searchKey, longitude, latitude, distance, total);
 			response.setQuantity(lst.size());
 			response.setItems(lst.toArray(new RestaurantsDTO[lst.size()]));
 			response.setSuccess(true);
 			response.setErrorCode(ConstantParams.ERROR_CODE_SUCCESS);
 			response.setErrorMess(ConstantParams.ERROR_MESS_SUCCESS);
 			return ConvertUtil.convertObjectToJson(response);
-		} catch (NumberFormatException e) {
-			response.setSuccess(false);
-			response.setErrorCode(ConstantParams.ERROR_CODE_PARAMS_INVALID);
-			response.setErrorMess(ConstantParams.ERROR_MESS_PARAMS_INVALID);
-			return ConvertUtil.convertObjectToJson(response);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("doSearchRestaurant  ERROR: ", e);
+			response.setSuccess(false);
+			if (e instanceof NumberFormatException
+					|| e instanceof NullPointerException) {
+				response.setErrorCode(ConstantParams.ERROR_CODE_PARAMS_INVALID);
+				response.setErrorMess(ConstantParams.ERROR_MESS_PARAMS_INVALID);
+				return ConvertUtil.convertObjectToJson(response);
+			}
 			response.setErrorCode(ConstantParams.ERROR_CODE_SYSTEM_ERROR);
 			response.setErrorMess(ConstantParams.ERROR_MESS_SYSTEM_ERROR + ": "
 					+ e.getMessage());

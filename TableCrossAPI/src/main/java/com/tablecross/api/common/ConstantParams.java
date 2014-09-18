@@ -42,6 +42,9 @@ public class ConstantParams {
 	public static int ERROR_CODE_EMAIL_IS_EXIST = 7;
 	public static String ERROR_MESS_EMAIL_IS_EXIST = "EMAIL_IS_EXIST";
 
+	public static int ERROR_CODE_WRONG_PASSWORD = 8;
+	public static String ERROR_MESS_WRONG_PASSWORD = "WRONG_PASSWORD";
+
 	public static int ERROR_CODE_SYSTEM_ERROR = 99;
 	public static String ERROR_MESS_SYSTEM_ERROR = "SYSTEM_ERROR";
 

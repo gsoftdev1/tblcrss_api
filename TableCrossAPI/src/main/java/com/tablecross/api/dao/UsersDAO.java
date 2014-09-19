@@ -84,7 +84,7 @@ public class UsersDAO {
 			} catch (SQLException e) {
 				log.error("Rollback exception: ", e);
 			}
-			log.error("SQLException while changePassword: " + re.toString());
+			log.error("SQLException while insert user: " + re.toString());
 			log.error("Failed SQL statement:  " + sql);
 			throw re;
 		} finally {

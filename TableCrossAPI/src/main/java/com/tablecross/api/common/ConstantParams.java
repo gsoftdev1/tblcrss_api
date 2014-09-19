@@ -1,7 +1,10 @@
 package com.tablecross.api.common;
 
 public class ConstantParams {
-
+	/**
+	 * Order status
+	 */
+	public static final int ORDER_STATUS_PENDING = 0;
 	/**
 	 * LOGIN TYPE
 	 */

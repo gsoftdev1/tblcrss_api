@@ -11,6 +11,8 @@ public class ConvertUtil {
 			"yyyy-MM-dd HH:mm:ss");
 	private static SimpleDateFormat formatDateView = new SimpleDateFormat(
 			"dd/MM/yyyy");
+	private static SimpleDateFormat formatDateOrder = new SimpleDateFormat(
+			"dd/MM/yyyy HH:mm:ss");
 
 	public static String getFormatDateView(Date date) {
 		if (date == null) {
@@ -30,6 +32,10 @@ public class ConvertUtil {
 		} else {
 			return formatDateInsert.format(date);
 		}
+	}
+
+	public static Date parseFormatDateOrder(String date) throws ParseException {
+		return formatDateOrder.parse(date);
 	}
 
 	public static String convertObjectToJson(Object o) {

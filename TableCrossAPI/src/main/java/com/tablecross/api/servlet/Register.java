@@ -86,7 +86,8 @@ public class Register extends HttpServlet {
 			Integer userId = UsersDAO.insert(userDTO);
 
 			log.info("doRegister userId: " + userId);
-			if (userId == null || userId == 0) {
+			if (userId == null || userId.intValue() == 0) {
+				response.setSuccess(false);
 				response.setErrorCode(ConstantParams.ERROR_CODE_SYSTEM_ERROR);
 				response.setErrorMess(ConstantParams.ERROR_MESS_SYSTEM_ERROR);
 				return ConvertUtil.convertObjectToJson(response);
